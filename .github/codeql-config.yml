@@ -1,0 +1,244 @@
+name: "CodeQL Security Analysis Configuration"
+
+# Database Creation & Build
+paths-ignore:
+  - "**/tests"
+  - "**/test"
+  - "**/spec"
+  - "**/node_modules"
+  - "**/vendor"
+  - "**/.git"
+  - "**/dist"
+  - "**/build"
+  - "**/coverage"
+
+# Query Configuration
+# Multiple query suite options available:
+# - default: All critical security queries (recommended for most projects)
+# - security-and-quality: Security + code quality checks
+# - extended: All queries including experimental
+
+queries:
+  # Default security-focused queries
+  - uses: security-and-quality
+
+# Custom Query Packs
+# Can reference packs from GitHub Container Registry or local repositories
+packs:
+  # Official GitHub Security Packs
+  github/codeql-go:
+    version: 3.2.0
+  github/codeql-java:
+    version: 3.2.0
+  github/codeql-javascript:
+    version: 3.2.0
+  github/codeql-python:
+    version: 3.2.0
+
+  # Custom Organization Packs (if published to GHCR)
+  # ghcr.io/your-org/custom-security-queries:latest
+  # ghcr.io/your-org/compliance-checks:v1.0
+
+# Exclude specific paths from analysis
+path-ignore:
+  - "**/test/**"
+  - "**/tests/**"
+  - "**/node_modules/**"
+  - "**/vendor/**"
+  - "**/migrations/**"
+  - "**/fixtures/**"
+  - "**/.github/**"
+  - "**/docs/**"
+  - "**/*.min.js"
+
+# Disable specific queries if needed (use with caution)
+disable-default-queries: false
+
+# Advanced Options
+advanced:
+  # Suppress errors and preserve exception semantics
+  trap-caching: true
+
+  # Timeout for evaluating a single query (seconds)
+  query-eval-timeout: 1800
+
+# Environment Variables for Build
+env:
+  # Set environment variables for custom builds
+  # Example for multi-language projects
+  CODEQL_EXTRACTOR_JAVA_BUILD_MAVEN: "true"
+  CODEQL_EXTRACTOR_JAVASCRIPT_TRACE_FUNCTION_CALLS: "true"
+
+# Severity Configuration
+# Map finding severity to alert action
+severities:
+  critical:
+    enabled: true
+  high:
+    enabled: true
+  medium:
+    enabled: true
+  low:
+    enabled: true
+  note:
+    enabled: false
+
+# Reporting Configuration
+reporting:
+  # Include detailed query documentation
+  include-query-documentation: true
+
+  # Include tags in results
+  include-tags: true
+
+# 2025 AI-Enhanced Features
+ai-powered-analysis:
+  # Enable contextual analysis for more accurate results
+  context-analysis: true
+
+  # AI-powered vulnerability classification
+  smart-categorization: true
+
+  # Reduce false positives using pattern recognition
+  false-positive-reduction: true
+
+# Custom Queries Example
+# These would typically be stored in a separate custom pack
+# For quick inline configuration, include the paths below
+custom-queries:
+  # Example: Detection of hardcoded credentials
+  - id: hardcoded-secrets-detection
+    enabled: true
+    paths:
+      - "queries/hardcoded-secrets.ql"
+
+  # Example: Insecure API usage
+  - id: insecure-api-patterns
+    enabled: true
+    paths:
+      - "queries/insecure-api.ql"
+
+  # Example: OWASP-specific queries
+  - id: owasp-top-10
+    enabled: true
+    paths:
+      - "queries/owasp/"
+
+# Database Options
+database:
+  # Reuse existing database for faster scans (optional)
+  reuse-existing: false
+
+  # Run sarif upload after analysis
+  upload-sarif: true
+
+# Language-Specific Configuration
+language-configs:
+
+  # JavaScript/TypeScript Configuration
+  javascript:
+    extractors:
+      typescript: true
+      flow: false
+    exclude-test-files: true
+
+  # Python Configuration
+  python:
+    version: "3.11"
+    analyze-all-versions: false
+
+  # Java Configuration
+  java:
+    # Enable Maven/Gradle dependency analysis
+    extract-dependencies: true
+
+  # Go Configuration
+  go:
+    version: "1.21"
+
+# Performance Tuning
+performance:
+  # Number of parallel threads for analysis
+  threads: 4
+
+  # Memory allocation (in MB)
+  memory: 2048
+
+  # Disable specific expensive checks
+  disable-expensive-checks: false
+
+# Query Results Filtering
+filters:
+  # Exclude results from auto-generated code
+  exclude-generated: true
+
+  # Minimum result precision (low, medium, high)
+  min-precision: "medium"
+
+  # Result deduplication
+  deduplicate-results: true
+
+# Integration with GitHub Security
+github-integration:
+  # Create security alerts for findings
+  create-alerts: true
+
+  # Block PRs based on severity
+  block-pr-on-critical: true
+  block-pr-on-high: false
+
+  # Auto-dismiss resolved alerts after (days)
+  auto-dismiss-fixed: 7
+
+  # Auto-dismiss false positives
+  auto-dismiss-false-positives: 30
+
+# Scheduling Options (for workflow integration)
+# CodeQL can be triggered:
+# - on: [push] - Every push to default branch
+# - on: [pull_request] - Every PR
+# - schedule: - Nightly/periodic runs
+# - workflow_dispatch: - Manual trigger
+
+# Example CodeQL Query (inline)
+# This demonstrates what a basic security query looks like:
+#
+# import cpp
+# import semmle.code.cpp.security.BufferOverflow
+#
+# from BufferOverflowAnalysis analysis, Variable v
+# where analysis.overflows(v)
+# select v, "Potential buffer overflow"
+
+---
+# NOTES FOR IMPLEMENTATION:
+#
+# 1. Custom Query Packs:
+#    - Create a qlpack.yml in custom query directory
+#    - Publish to GHCR for organization use
+#    - Reference with full GHCR path
+#
+# 2. Query Suite Selection:
+#    - Use "security-and-quality" for comprehensive coverage
+#    - Custom packs can include domain-specific queries
+#    - Balance between coverage and analysis time
+#
+# 3. Performance:
+#    - Large repos may need timeout adjustments
+#    - Parallel threads depend on runner capacity
+#    - Incremental analysis available via database reuse
+#
+# 4. Severity Configuration:
+#    - Can be customized per organization
+#    - Integrates with GitHub Security settings
+#    - Affects PR blocking and alert generation
+#
+# 5. Language Support (CodeQL 3.2.0):
+#    - C/C++, C#, Go, Java, JavaScript/TypeScript, Python, Ruby, Swift
+#    - Some languages may need specific setup (build commands, etc.)
+#
+# 6. Advanced Features (2025):
+#    - AI-powered context analysis
+#    - Smart vulnerability categorization
+#    - ML-based false positive reduction
+#    - Extended metadata for findings

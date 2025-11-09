@@ -1,0 +1,68 @@
+# GitHub Code Owners
+# This file defines who should review changes to specific areas of the codebase
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Default owner for all files in repository
+* @security-team @devops-team
+
+# Security-related files
+.github/ @security-team
+SECURITY.md @security-team
+.github/workflows/codeql-analysis.yml @security-team @devops-team
+.github/workflows/dependency-review.yml @security-team @devops-team
+.github/workflows/security-orchestration.yml @security-team @devops-team
+.github/codeql-config.yml @security-team
+.github/secret_scanning.yml @security-team
+.github/dependabot.yml @security-team
+.github/IMPLEMENTATION_GUIDE.md @security-team
+
+# Application code
+src/auth/ @security-team @backend-team
+src/api/ @api-team
+src/database/ @database-team @security-team
+src/encryption/ @security-team @cryptography-team
+src/logging/ @devops-team @security-team
+
+# Infrastructure
+docker/ @devops-team @security-team
+terraform/ @devops-team @security-team
+kubernetes/ @devops-team @security-team
+
+# Configuration files
+*.yml @security-team
+*.yaml @security-team
+.env.* @security-team
+secrets.* @security-team
+
+# Documentation
+docs/ @tech-writers @security-team
+README.md @project-leads
+CONTRIBUTING.md @security-team @project-leads
+
+# Build and dependency files
+package.json @backend-team
+package-lock.json @backend-team
+requirements.txt @backend-team
+requirements*.txt @backend-team
+Pipfile @backend-team
+pom.xml @backend-team
+build.gradle @backend-team
+Dockerfile @devops-team @security-team
+docker-compose.yml @devops-team @security-team
+
+# Test files
+tests/ @qa-team
+test/ @qa-team
+__tests__/ @qa-team
+
+# Configuration
+.github/CODEOWNERS @security-team @project-leads
+.gitignore @security-team
+.gitattributes @security-team
+
+# Notes:
+# - A review from someone in the security-team is required for security-related changes
+# - A review from devops-team is required for infrastructure changes
+# - Multiple owners can be assigned (space-separated)
+# - Teams should be written as @org-name/team-name or individual users as @username
+# - More specific patterns override less specific ones

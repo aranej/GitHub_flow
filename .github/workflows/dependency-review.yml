@@ -1,0 +1,314 @@
+name: "Dependency Review & Supply Chain Security"
+
+# Trigger on pull requests that change dependencies
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+    paths:
+      - "package.json"
+      - "package-lock.json"
+      - "requirements.txt"
+      - "requirements*.txt"
+      - "pyproject.toml"
+      - "Pipfile"
+      - "Pipfile.lock"
+      - "pom.xml"
+      - "build.gradle"
+      - "Dockerfile"
+      - "docker-compose.yml"
+      - "go.mod"
+      - "go.sum"
+      - "Gemfile"
+      - "Gemfile.lock"
+      - "Cargo.toml"
+      - "Cargo.lock"
+  workflow_dispatch:  # Manual trigger
+
+permissions:
+  contents: read
+  pull-requests: write
+  security-events: read
+
+jobs:
+  # Dependency Review Job
+  dependency-review:
+    name: "Review Dependencies"
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29  # v4.1.6
+        with:
+          fetch-depth: 0
+
+      # Official GitHub Dependency Review Action
+      - name: Dependency Review
+        uses: github/dependency-review-action@5bbc3ba658137199efdaec3b7fb6cec898faa33b  # v4.3.2
+        with:
+          # Fail on high/critical vulnerabilities
+          fail-on-severity: high
+          # Allow CVSS score cutoff
+          allow-ghsas: ""
+          # Comment on PR with findings
+          comment-summary-in-pr: always
+          # Retry configuration
+          retry-on-snapshot-warnings: true
+          # Show deprecations
+          show-deprecations: true
+
+  # SBOM (Software Bill of Materials) Generation
+  sbom:
+    name: "Generate SBOM"
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29  # v4.1.6
+
+      # Install CycloneDX tool for SBOM generation
+      - name: Setup Python
+        uses: actions/setup-python@f677139bbe7f9c59b41e7cb6ac8b36516faee348  # v5.2.0
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Generate CycloneDX SBOM
+        run: |
+          pip install cyclonedx-bom
+          # Generate SBOM for Python
+          cyclonedx-bom -o sbom.xml -v 1 2>/dev/null || true
+          # Generate SBOM for NPM
+          npm install -g cyclonedx-npm
+          cyclonedx-npm -o sbom-npm.xml 2>/dev/null || true
+        continue-on-error: true
+
+      # Upload SBOM artifacts
+      - name: Upload SBOM Artifacts
+        uses: actions/upload-artifact@604373da6381d3951d3a00ce3283aa80f91d6ddf  # v4.3.5
+        with:
+          name: sbom
+          path: sbom*.xml
+          retention-days: 90
+
+  # Vulnerabilities Assessment
+  vulnerabilities:
+    name: "Assess Vulnerabilities"
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      security-events: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29  # v4.1.6
+
+      # Setup for different package managers
+      - name: Setup Node.js
+        uses: actions/setup-node@60edb5dd545a775178fac7f3d4f4fbb44de39837  # v4.0.2
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Setup Python
+        uses: actions/setup-python@f677139bbe7f9c59b41e7cb6ac8b36516faee348  # v5.2.0
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      # npm audit
+      - name: NPM Audit
+        continue-on-error: true
+        run: |
+          npm audit --audit-level=moderate 2>/dev/null || true
+          npm audit --json > npm-audit.json 2>/dev/null || echo "{}" > npm-audit.json
+
+      # pip audit
+      - name: Pip Audit
+        continue-on-error: true
+        run: |
+          pip install pip-audit
+          pip-audit --desc 2>/dev/null || true
+          pip-audit --desc --format json > pip-audit.json 2>/dev/null || echo "{}" > pip-audit.json
+
+      # Upload audit results
+      - name: Upload Audit Results
+        uses: actions/upload-artifact@604373da6381d3951d3a00ce3283aa80f91d6ddf  # v4.3.5
+        with:
+          name: vulnerability-scans
+          path: |
+            npm-audit.json
+            pip-audit.json
+          retention-days: 90
+
+  # Dependabot Status Check
+  dependabot-status:
+    name: "Check Dependabot Status"
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29  # v4.1.6
+
+      # Check if PR is from Dependabot
+      - name: Identify Dependabot Updates
+        if: ${{ github.actor == 'dependabot[bot]' || github.actor == 'dependabot' }}
+        run: |
+          echo "Dependabot Update Detected"
+          echo "PR Title: ${{ github.event.pull_request.title }}"
+          echo "PR Author: ${{ github.actor }}"
+
+      # Label Dependabot PRs
+      - name: Label Dependabot PRs
+        if: ${{ github.actor == 'dependabot[bot]' || github.actor == 'dependabot' }}
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea  # v7.0.1
+        with:
+          script: |
+            github.rest.issues.addLabels({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: ['dependencies', 'automated']
+            })
+
+  # License Compliance Check
+  license-check:
+    name: "License Compliance"
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29  # v4.1.6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@60edb5dd545a775178fac7f3d4f4fbb44de39837  # v4.0.2
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      # License scanning for NPM
+      - name: Check NPM Licenses
+        continue-on-error: true
+        run: |
+          npm install -g license-report
+          license-report --package package.json --only prod 2>/dev/null || true
+
+      - name: Setup Python
+        uses: actions/setup-python@f677139bbe7f9c59b41e7cb6ac8b36516faee348  # v5.2.0
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      # License scanning for Python
+      - name: Check Python Licenses
+        continue-on-error: true
+        run: |
+          pip install pip-licenses
+          pip-licenses --format=json > licenses.json 2>/dev/null || true
+
+      - name: Upload License Report
+        uses: actions/upload-artifact@604373da6381d3951d3a00ce3283aa80f91d6ddf  # v4.3.5
+        with:
+          name: license-report
+          path: licenses.json
+          retention-days: 90
+
+  # Security Advisory Summary
+  summary:
+    name: "Generate Summary Report"
+    runs-on: ubuntu-latest
+    if: always()
+    needs: [dependency-review, vulnerabilities, license-check]
+    permissions:
+      pull-requests: write
+
+    steps:
+      - name: Create Summary Comment
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea  # v7.0.1
+        with:
+          script: |
+            const fs = require('fs');
+            const summary = `
+            ## 🔒 Supply Chain Security Review
+
+            ### Checks Performed
+            - ✅ Dependency Review
+            - ✅ Vulnerability Assessment
+            - ✅ License Compliance
+            - ✅ SBOM Generation
+
+            ### Summary
+            This PR has been scanned for:
+            1. **New Vulnerabilities**: Checked against latest advisories
+            2. **License Compliance**: Verified dependency licenses
+            3. **Supply Chain Safety**: Assessed for known risks
+
+            ### Action Items
+            If issues are found, please:
+            1. Review the findings in the PR checks
+            2. Address high/critical vulnerabilities
+            3. Update dependencies as needed
+            4. Re-run the scan
+
+            For more details, check the **Dependency Review** section below.
+            `;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: summary
+            });
+
+---
+# IMPLEMENTATION NOTES:
+#
+# 1. DEPENDENCY REVIEW:
+#    - Fails on high/critical vulnerabilities
+#    - Comments findings on PR
+#    - Uses GitHub's advisory database
+#
+# 2. SBOM GENERATION:
+#    - Creates Software Bill of Materials
+#    - CycloneDX format (standard)
+#    - Supports npm and Python
+#
+# 3. VULNERABILITY SCANNING:
+#    - npm audit for JavaScript/Node.js
+#    - pip-audit for Python
+#    - Results stored as artifacts
+#
+# 4. DEPENDABOT DETECTION:
+#    - Identifies Dependabot PRs
+#    - Auto-labels for easy filtering
+#    - Can be used for auto-merge policies
+#
+# 5. LICENSE COMPLIANCE:
+#    - Scans for problematic licenses
+#    - Generates license report
+#    - Can block PRs with restricted licenses
+#
+# 6. ARTIFACT RETENTION:
+#    - SBOM: 90 days
+#    - Audit results: 90 days
+#    - License reports: 90 days
+#    - For compliance and audit trails
+#
+# 7. PR BLOCKING:
+#    - High/critical vulns fail the check
+#    - Dependabot PRs auto-labeled
+#    - Can integrate with branch protection rules

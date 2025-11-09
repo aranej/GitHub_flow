@@ -1,0 +1,288 @@
+╔════════════════════════════════════════════════════════════════════════════╗
+║              RELEASE AUTOMATION 2025 - QUICK REFERENCE CARD               ║
+║                         Version 1.0 - 2025-11-09                          ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+COMMIT MESSAGE FORMAT
+════════════════════════════════════════════════════════════════════════════
+feat(scope):    → Bumps MINOR version (new feature)
+fix(scope):     → Bumps PATCH version (bug fix)
+feat!:          → Bumps MAJOR version (breaking change)
+BREAKING CHANGE:→ Bumps MAJOR version (in commit body)
+docs:           → No version bump
+chore:          → No version bump
+style:          → No version bump
+test:           → No version bump
+
+GOOD EXAMPLES:
+  git commit -m "feat(auth): add OAuth2 support"
+  git commit -m "fix(ui): button alignment issue"
+  git commit -m "feat!: redesign API endpoints"
+
+BAD EXAMPLES:
+  "updated code" ✗
+  "Feat: Added feature" ✗
+  "feat: add feature." ✗
+
+════════════════════════════════════════════════════════════════════════════
+
+VERSION BUMPING MATRIX
+════════════════════════════════════════════════════════════════════════════
+Current     Changes                 Next Version
+──────────────────────────────────────────────────
+1.0.0   +   feat                    1.1.0
+1.0.0   +   fix                     1.0.1
+1.0.0   +   BREAKING CHANGE         2.0.0
+1.0.0   +   docs/chore/test         1.0.0 (no change)
+
+PRERELEASE VERSIONS:
+  1.0.0-alpha.1    Early development
+  1.0.0-beta.1     Feature complete, in testing
+  1.0.0-rc.1       Release candidate, almost ready
+  1.0.0            Stable release
+
+════════════════════════════════════════════════════════════════════════════
+
+SETUP OPTIONS COMPARISON
+════════════════════════════════════════════════════════════════════════════
+                  semantic-release  Changesets    Release Drafter
+─────────────────────────────────────────────────────────────────
+Single Package    ✓ Excellent       ⚠ OK          ⚠ Manual
+Monorepo          ⚠ With plugin     ✓ Excellent   ⚠ Manual
+Automation        ✓ Fully auto      ✓ Fully auto  ⚠ Semi-manual
+Ease of Use       ⚠ Medium          ✓ Easy        ✓ Easy
+Learning Curve    ⚠ Medium          ✓ Low         ✓ Low
+Team Friendly     ⚠ DevOps          ✓ All devs    ✓ All teams
+
+Choose based on project:
+  → Single package:      Option A (semantic-release)
+  → Monorepo:            Option B (Changesets + pnpm)
+  → Want review control: Option C (Release Drafter)
+
+════════════════════════════════════════════════════════════════════════════
+
+QUICK START (30 MINUTES)
+════════════════════════════════════════════════════════════════════════════
+
+OPTION A - Single NPM Package:
+  1. npm install --save-dev semantic-release @semantic-release/github
+  2. Copy .releaserc.json to your project
+  3. Copy .github/workflows/release.yml to your project
+  4. npx semantic-release --dry-run
+  5. git add . && git commit -m "chore: setup releases"
+  6. git push
+  7. Make a feat commit to trigger first release
+
+OPTION B - Monorepo with pnpm:
+  1. npm install -g pnpm
+  2. pnpm add -D @changesets/cli @changesets/changelog-github
+  3. pnpm changeset init
+  4. Copy .changeset/config.json to your project
+  5. Copy .github/workflows/changesets-release.yml
+  6. pnpm changeset  (preview version bump)
+  7. git push (GitHub Action creates release PR)
+
+OPTION C - Manual with Release Drafter:
+  1. npm install --save-dev release-drafter/release-drafter
+  2. Copy .github/workflows/release-drafter.yml
+  3. Copy .github/release-drafter.yml
+  4. Add GitHub labels: feature, bugfix, breaking, docs
+  5. Push to main with proper PR labels
+  6. Draft release auto-updates
+  7. Publish manually when ready
+
+════════════════════════════════════════════════════════════════════════════
+
+GITHUB CONFIGURATION
+════════════════════════════════════════════════════════════════════════════
+
+SECRETS (Settings → Secrets and variables → Actions):
+  □ NPM_TOKEN       (from npmjs.com, scope: publish:all)
+  □ PYPI_TOKEN      (if publishing to PyPI)
+  □ GITHUB_TOKEN    (auto-created, verify permissions)
+
+BRANCH PROTECTION (Settings → Branches → main):
+  □ Require pull request reviews: 1+
+  □ Require status checks to pass
+  □ Restrict who can push: Add github-actions[bot]
+  □ Allow deletions: OFF
+  □ Allow force pushes: OFF
+
+ACTIONS PERMISSIONS (Settings → Actions → General):
+  □ Read and write permissions: ON
+  □ Allow PR approvals: ON
+
+════════════════════════════════════════════════════════════════════════════
+
+COMMON COMMANDS
+════════════════════════════════════════════════════════════════════════════
+
+Test Locally (without publishing):
+  npx semantic-release --dry-run
+  pnpm changeset
+  pnpm changeset version
+
+GitHub CLI:
+  gh release create v1.0.0                    Create release
+  gh release create v1.0.0 --generate-notes   With auto notes
+  gh release list --limit 10                  List releases
+  gh release edit v1.0.0 --draft=false       Publish draft
+
+Debugging:
+  git log --oneline | head -10                View recent commits
+  git describe --tags --abbrev=0              Get latest tag
+  DEBUG=semantic-release:* npm run release    Debug semantic-release
+
+════════════════════════════════════════════════════════════════════════════
+
+TROUBLESHOOTING
+════════════════════════════════════════════════════════════════════════════
+
+Release not creating?
+  → Check commit message format (must start with feat:, fix:, etc)
+  → Verify you're pushing to main branch
+  → Check GitHub Actions logs
+
+Wrong version bump?
+  → Verify commit type (feat = minor, fix = patch)
+  → Check for BREAKING CHANGE in commit body
+  → Test locally: npx semantic-release --dry-run
+
+Publishing failing?
+  → Verify NPM_TOKEN is set and valid
+  → Check token has publish scopes
+  → Verify package.json is correct
+
+GitHub Action failing?
+  → Check workflow YAML syntax (indentation)
+  → Verify all secrets are configured
+  → Check branch protection settings
+
+════════════════════════════════════════════════════════════════════════════
+
+KEY FILES
+════════════════════════════════════════════════════════════════════════════
+
+Start Here:
+  📖 SETUP_GUIDE.md              How to set up
+  📖 RELEASE_AUTOMATION_INDEX.md Overview and navigation
+
+Deep Dive:
+  📖 RELEASE_AUTOMATION_2025.md       Complete guide
+  📖 GITHUB_RELEASES_API.md           API reference
+  📖 RELEASE_AUTOMATION_REFERENCE.md  Quick lookup tables
+
+Configuration:
+  ⚙️  .releaserc.json                semantic-release config
+  ⚙️  .changeset/config.json        Changesets config
+  ⚙️  .github/workflows/release.yml  GitHub Actions workflow
+
+Setup:
+  🔧 scripts/setup-release-automation.sh  Interactive wizard
+
+════════════════════════════════════════════════════════════════════════════
+
+DOCUMENTATION STRUCTURE
+════════════════════════════════════════════════════════════════════════════
+
+For Implementation:
+  1. Read: SETUP_GUIDE.md
+  2. Run: scripts/setup-release-automation.sh
+  3. Test: npx semantic-release --dry-run
+  4. Deploy: git push
+
+For Understanding:
+  1. Read: RELEASE_AUTOMATION_2025.md
+  2. Review: Tool comparison in RELEASE_AUTOMATION_REFERENCE.md
+  3. Choose: Option A, B, or C
+  4. Follow: SETUP_GUIDE.md
+
+For Quick Lookup:
+  → RELEASE_AUTOMATION_REFERENCE.md (tables, commands, examples)
+
+For Troubleshooting:
+  → SETUP_GUIDE.md (troubleshooting section)
+  → RELEASE_AUTOMATION_REFERENCE.md (decision trees)
+  → GITHUB_RELEASES_API.md (error handling)
+
+════════════════════════════════════════════════════════════════════════════
+
+2025 BEST PRACTICES
+════════════════════════════════════════════════════════════════════════════
+
+✓ Use OIDC tokens instead of long-lived secrets
+✓ Trunk-based development with short-lived branches
+✓ Enforce Conventional Commits with commitlint
+✓ Automate all releases (no manual version bumping)
+✓ Generate changelogs automatically
+✓ Use Release Flow for stability + velocity
+✓ Feature flags for continuous deployment
+✓ Sign commits with GPG when possible
+✓ Review branch protection rules quarterly
+✓ Rotate authentication tokens monthly
+
+════════════════════════════════════════════════════════════════════════════
+
+TEAM CHECKLIST
+════════════════════════════════════════════════════════════════════════════
+
+Before first release:
+  □ Team reads SETUP_GUIDE.md
+  □ Team understands commit format
+  □ Test commit hook locally
+  □ Verify GitHub secrets configured
+  □ Branch protection enabled
+  □ Run dry-run successfully
+
+During first release:
+  □ Make feat commit with proper format
+  □ Push to GitHub
+  □ Watch GitHub Action run
+  □ Verify release created
+  □ Check release notes
+  □ Verify package published
+
+After first release:
+  □ Get team feedback
+  □ Document process
+  □ Schedule training if needed
+  □ Adjust configuration as needed
+  □ Setup monitoring/notifications
+
+════════════════════════════════════════════════════════════════════════════
+
+QUICK HELP
+════════════════════════════════════════════════════════════════════════════
+
+"I have a single npm package"
+  → Use Option A (semantic-release)
+  → Follow: SETUP_GUIDE.md → Section "Option A"
+
+"I have a monorepo with multiple packages"
+  → Use Option B (Changesets + pnpm)
+  → Follow: SETUP_GUIDE.md → Section "Option B"
+
+"I want manual control over releases"
+  → Use Option C (Release Drafter)
+  → Follow: SETUP_GUIDE.md → Section "Option C"
+
+"I want to integrate with my tools"
+  → Read: GITHUB_RELEASES_API.md
+  → Study code examples
+  → Use: GitHub API
+
+"Something isn't working"
+  → Check: SETUP_GUIDE.md → Troubleshooting
+  → Check: RELEASE_AUTOMATION_REFERENCE.md → Decision Tree
+  → Check: GitHub Actions logs
+
+════════════════════════════════════════════════════════════════════════════
+
+Remember: Commits drive releases. Good commits = good releases.
+
+Format: type(scope): subject
+Example: feat(auth): add two-factor authentication
+
+Ready to start? → Open SETUP_GUIDE.md
+
+════════════════════════════════════════════════════════════════════════════

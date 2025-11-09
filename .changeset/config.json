@@ -1,0 +1,31 @@
+{
+  "$schema": "https://unpkg.com/@changesets/config@2.3.1/schema.json",
+  "changelog": [
+    "@changesets/changelog-github",
+    {
+      "repo": "username/reponame"
+    }
+  ],
+  "commit": false,
+  "fixed": [],
+  "linked": [],
+  "access": "public",
+  "baseBranches": [
+    "main",
+    "beta"
+  ],
+  "updateInternalDependencies": "patch",
+  "ignore": [
+    "@org/internal-tools",
+    "example-app"
+  ],
+  "privatePackages": {
+    "skipChangeFiles": true
+  },
+  "bumpVersionsWithWorkspaceProtocolOnly": false,
+  "snapshot": {
+    "prereleaseTemplate": "{tag}.{hashedCommitLength}-{commit}",
+    "useCalendarVersioning": false,
+    "commit": "chore: snapshot release"
+  }
+}

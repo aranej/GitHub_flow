@@ -1,0 +1,124 @@
+name-template: 'v$RESOLVED_VERSION'
+tag-template: 'v$RESOLVED_VERSION'
+
+categories:
+  - title: '🚀 Features'
+    labels:
+      - 'feature'
+      - 'enhancement'
+      - 'type: enhancement'
+
+  - title: '🐛 Bug Fixes'
+    labels:
+      - 'fix'
+      - 'bugfix'
+      - 'bug'
+      - 'type: bug'
+
+  - title: '💥 Breaking Changes'
+    labels:
+      - 'breaking'
+      - 'breaking-change'
+      - 'type: breaking'
+
+  - title: '📚 Documentation'
+    labels:
+      - 'documentation'
+      - 'docs'
+      - 'type: documentation'
+
+  - title: '⚡ Performance'
+    labels:
+      - 'performance'
+      - 'perf'
+      - 'type: performance'
+
+  - title: '🔧 Maintenance'
+    labels:
+      - 'chore'
+      - 'maintenance'
+      - 'dependencies'
+      - 'type: dependencies'
+      - 'type: chore'
+
+  - title: '🔐 Security'
+    labels:
+      - 'security'
+      - 'type: security'
+
+version-resolver:
+  major:
+    labels:
+      - 'breaking'
+      - 'breaking-change'
+      - 'type: breaking'
+
+  minor:
+    labels:
+      - 'feature'
+      - 'enhancement'
+      - 'type: enhancement'
+
+  patch:
+    labels:
+      - 'fix'
+      - 'bugfix'
+      - 'bug'
+      - 'type: bug'
+      - 'type: performance'
+
+  default: patch
+
+exclude-labels:
+  - 'skip-changelog'
+  - 'skip-release'
+  - 'internal'
+  - 'wontfix'
+
+exclude-contributors:
+  - 'dependabot'
+  - 'dependabot[bot]'
+  - 'renovate'
+  - 'renovate[bot]'
+
+template: |
+  ## What's Changed
+  $CHANGES
+
+  ## Contributors
+  $CONTRIBUTORS
+
+autolabeler:
+  - label: 'feature'
+    title:
+      - '/^feat/i'
+    body:
+      - '/new feature/i'
+
+  - label: 'bugfix'
+    title:
+      - '/^fix/i'
+    body:
+      - '/fixed/i'
+
+  - label: 'breaking'
+    title:
+      - '/^feat!:/i'
+      - '/BREAKING CHANGE/i'
+    body:
+      - '/BREAKING CHANGE/i'
+
+  - label: 'documentation'
+    title:
+      - '/^docs/i'
+    files:
+      - '*.md'
+
+  - label: 'dependencies'
+    title:
+      - '/^chore\(deps\)/i'
+    files:
+      - 'package.json'
+      - 'yarn.lock'
+      - 'package-lock.json'
+      - 'pnpm-lock.yaml'

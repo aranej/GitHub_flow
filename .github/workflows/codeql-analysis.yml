@@ -1,0 +1,260 @@
+name: "CodeQL Security Analysis"
+
+# Trigger conditions
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - "release/**"
+    paths:
+      - "src/**"
+      - "lib/**"
+      - "app/**"
+      - "*.yml"
+      - "*.yaml"
+  pull_request:
+    branches:
+      - main
+      - develop
+    paths:
+      - "src/**"
+      - "lib/**"
+      - "app/**"
+      - "*.yml"
+      - "*.yaml"
+  schedule:
+    # Nightly full CodeQL scan at 2 AM UTC
+    - cron: "0 2 * * *"
+  workflow_dispatch:  # Allow manual triggering
+
+env:
+  CODEQL_THREADS: 4
+  CODEQL_MEMORY: 2048
+
+# Minimum permissions following least-privilege principle
+permissions:
+  contents: read
+  security-events: write
+  actions: read
+
+jobs:
+  analyze:
+    name: "Analyze (${{ matrix.language }})"
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+
+    strategy:
+      fail-fast: false
+      matrix:
+        # Supported languages and their detection patterns
+        language:
+          - "javascript"
+          - "python"
+          - "java"
+          - "cpp"
+
+        include:
+          - language: "javascript"
+            build-mode: "none"
+            timeout: 90
+
+          - language: "python"
+            build-mode: "none"
+            timeout: 60
+
+          - language: "java"
+            build-mode: "maven"
+            timeout: 120
+
+          - language: "cpp"
+            build-mode: "autobuild"
+            timeout: 120
+
+    steps:
+      # Checkout repository with full history for analysis
+      - name: Checkout repository
+        uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29  # v4.1.6
+        with:
+          fetch-depth: 0
+
+      # Initialize CodeQL
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@b611370bb5703a7efb0de32a6a5e4c47e5857c74  # v3.26.11
+        with:
+          languages: ${{ matrix.language }}
+          # Use custom configuration file
+          config-file: .github/codeql-config.yml
+          # Query suite selection
+          queries: security-and-quality
+          # Disable default queries if using custom ones
+          # disable-default-queries: false
+          # Advanced options
+          tools: latest
+
+      # Language-specific build setup for compiled languages
+      - name: Setup Node.js (JavaScript)
+        if: matrix.language == 'javascript'
+        uses: actions/setup-node@60edb5dd545a775178fac7f3d4f4fbb44de39837  # v4.0.2
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install JavaScript dependencies
+        if: matrix.language == 'javascript'
+        run: npm ci
+
+      - name: Setup Python
+        if: matrix.language == 'python'
+        uses: actions/setup-python@f677139bbe7f9c59b41e7cb6ac8b36516faee348  # v5.2.0
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install Python dependencies
+        if: matrix.language == 'python'
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt 2>/dev/null || true
+
+      - name: Setup Java
+        if: matrix.language == 'java'
+        uses: actions/setup-java@99b8673ff64fbee33d8c1d693f6ae92b28a9ea86  # v4.2.1
+        with:
+          java-version: "17"
+          distribution: "temurin"
+          cache: "maven"
+
+      - name: Setup C/C++ Build
+        if: matrix.language == 'cpp'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake
+
+      # Autobuild for compiled languages
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@b611370bb5703a7efb0de32a6a5e4c47e5857c74  # v3.26.11
+        if: matrix.build-mode == 'autobuild'
+        timeout-minutes: ${{ matrix.timeout }}
+
+      # Maven build for Java
+      - name: Build with Maven
+        if: matrix.language == 'java' && matrix.build-mode == 'maven'
+        run: mvn -B compile
+        timeout-minutes: 120
+
+      # Custom build for Node.js
+      - name: Build JavaScript/TypeScript
+        if: matrix.language == 'javascript' && matrix.build-mode == 'none'
+        run: |
+          npm run build 2>/dev/null || true
+        timeout-minutes: 30
+
+      # Custom build for Python
+      - name: Build Python (if needed)
+        if: matrix.language == 'python' && matrix.build-mode == 'none'
+        run: |
+          python -m py_compile src/ 2>/dev/null || true
+        timeout-minutes: 30
+
+      # Perform CodeQL analysis
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@b611370bb5703a7efb0de32a6a5e4c47e5857c74  # v3.26.11
+        with:
+          category: "/language:${{ matrix.language }}"
+          wait-for-processing: true
+          upload: true
+
+      # Upload SARIF results for further processing
+      - name: Upload SARIF Results
+        uses: github/codeql-action/upload-sarif@b611370bb5703a7efb0de32a6a5e4c47e5857c74  # v3.26.11
+        if: always()
+        with:
+          sarif_file: "results"
+          category: "/language:${{ matrix.language }}"
+
+  # Post-analysis actions
+  results:
+    name: "Process CodeQL Results"
+    runs-on: ubuntu-latest
+    if: always()
+    needs: analyze
+    permissions:
+      contents: read
+      security-events: write
+      pull-requests: write
+
+    steps:
+      - name: Download analysis results
+        uses: github/codeql-action/upload-sarif@b611370bb5703a7efb0de32a6a5e4c47e5857c74  # v3.26.11
+        if: failure()
+        with:
+          wait-for-processing: true
+
+      # Notify on critical findings
+      - name: Check for Critical Issues
+        if: failure()
+        run: |
+          echo "Critical CodeQL issues detected!"
+          echo "Review the security tab for details: ${{ github.server_url }}/${{ github.repository }}/security/code-scanning"
+
+      # Slack notification on critical findings (optional)
+      - name: Notify Slack on Critical Findings
+        if: failure()
+        uses: slackapi/slack-github-action@70cd7be8e40a46e8049ccf266fee8dae8893d45a  # v1.26.0
+        with:
+          webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
+          payload: |
+            {
+              "text": "🔴 Critical CodeQL Issue Detected",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*CodeQL Analysis Failed*\nRepository: `${{ github.repository }}`\nBranch: `${{ github.ref_name }}`\n<${{ github.server_url }}/${{ github.repository }}/security/code-scanning|View Results>"
+                  }
+                }
+              ]
+            }
+        continue-on-error: true
+
+---
+# CONFIGURATION NOTES:
+#
+# 1. TRIGGERS:
+#    - Push to main/develop branches
+#    - All pull requests
+#    - Nightly schedule for comprehensive scanning
+#    - Manual dispatch for on-demand analysis
+#
+# 2. MATRIX STRATEGY:
+#    - Analyzes multiple languages in parallel
+#    - Each language has specific build requirements
+#    - Timeout varies by language complexity
+#
+# 3. PERMISSIONS:
+#    - Minimal required permissions (least privilege)
+#    - contents: read - only for checkout
+#    - security-events: write - for result upload
+#
+# 4. PINNED ACTIONS:
+#    - All actions pinned to full commit SHA
+#    - Prevents supply chain attacks
+#    - Version numbers: @v4.1.6, @v3.26.11, etc.
+#
+# 5. TIMEOUTS:
+#    - Job timeout: 120 minutes
+#    - Build timeouts vary by language
+#    - Prevents hanging builds
+#
+# 6. RESULTS HANDLING:
+#    - SARIF upload for GitHub integration
+#    - Notifications on critical findings
+#    - Slack integration optional
+#
+# 7. BEST PRACTICES:
+#    - Cache dependencies for speed
+#    - Continue on error for notifications
+#    - Full repo history for accurate analysis
+#    - Secure secrets management

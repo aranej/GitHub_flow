@@ -1,0 +1,205 @@
+version: 2
+updates:
+  # NPM Dependency Updates
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "03:00"
+    open-pull-requests-limit: 10
+    pull-request-branch-name:
+      separator: "/"
+    reviewers:
+      - "security-team"
+    assignees:
+      - "devops-lead"
+    labels:
+      - "dependencies"
+      - "npm"
+      - "automated"
+    commit-message:
+      prefix: "chore(deps):"
+      include: "scope"
+    allow:
+      - dependency-type: "production"
+      - dependency-type: "dev"
+    ignore:
+      - dependency-name: "deprecated-package"
+        versions: ["1.x"]
+    # Group dependencies for better management
+    groups:
+      production-deps:
+        dependency-types:
+          - "production"
+        patterns:
+          - "express*"
+          - "cors*"
+          - "helmet*"
+      dev-deps:
+        dependency-types:
+          - "dev"
+      testing:
+        patterns:
+          - "jest*"
+          - "mocha*"
+          - "chai*"
+      linting:
+        patterns:
+          - "eslint*"
+          - "prettier*"
+
+  # Python Dependency Updates
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "04:00"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "security-team"
+    assignees:
+      - "python-maintainer"
+    labels:
+      - "dependencies"
+      - "python"
+      - "automated"
+    commit-message:
+      prefix: "chore(deps):"
+    allow:
+      - dependency-type: "production"
+      - dependency-type: "dev"
+    groups:
+      core:
+        dependency-types:
+          - "production"
+      dev:
+        dependency-types:
+          - "dev"
+
+  # Poetry Lock File Support
+  - package-ecosystem: "poetry"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "04:30"
+    reviewers:
+      - "security-team"
+    labels:
+      - "dependencies"
+      - "python"
+      - "poetry"
+    commit-message:
+      prefix: "chore(deps):"
+
+  # Docker Image Scanning
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "tuesday"
+      time: "02:00"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "infrastructure-team"
+    assignees:
+      - "devops-lead"
+    labels:
+      - "dependencies"
+      - "docker"
+      - "infrastructure"
+    commit-message:
+      prefix: "chore(docker):"
+
+  # GitHub Actions Updates
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "wednesday"
+      time: "05:00"
+    reviewers:
+      - "security-team"
+    assignees:
+      - "devops-lead"
+    labels:
+      - "dependencies"
+      - "github-actions"
+      - "ci-cd"
+    commit-message:
+      prefix: "chore(ci):"
+    allow:
+      - dependency-type: "direct"
+    pinning-dependencies: true  # Pin to specific versions
+
+  # Java/Maven Dependencies
+  - package-ecosystem: "maven"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+    reviewers:
+      - "security-team"
+    labels:
+      - "dependencies"
+      - "java"
+      - "maven"
+    commit-message:
+      prefix: "chore(deps):"
+    ignore:
+      - dependency-name: "javax.*"
+        versions: ["*"]
+
+  # Gradle Dependencies (if applicable)
+  - package-ecosystem: "gradle"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:30"
+    reviewers:
+      - "security-team"
+    labels:
+      - "dependencies"
+      - "java"
+      - "gradle"
+    commit-message:
+      prefix: "chore(deps):"
+
+# Security Updates (applies to all ecosystems)
+# Security updates are always processed immediately regardless of schedule
+# and bypass pull-request-limit restrictions
+
+# Shared Configuration Notes:
+#
+# pull-request-branch-name:
+#   - separator: Separates dependency name from version
+#
+# reviewers & assignees:
+#   - Automatically assigned to generated PRs
+#   - Can be teams or individual users
+#
+# groups:
+#   - Group related dependencies for fewer PRs
+#   - Reduces PR noise while maintaining security updates
+#
+# allow:
+#   - Filter which dependency types to update
+#   - Common types: production, dev, direct, indirect
+#
+# ignore:
+#   - Prevent updates for specific packages
+#   - Useful for deprecated or legacy support
+#
+# commit-message:
+#   - Customize commit message format
+#   - include: "scope" adds dependency type to message
+#
+# Schedule Intervals:
+#   - daily: Every day
+#   - weekly: Fixed day of week
+#   - monthly: First day of month
+#   - "every N hours/days": Custom interval

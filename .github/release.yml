@@ -1,0 +1,68 @@
+changelog:
+  exclude:
+    labels:
+      - ignore
+      - skip-changelog
+      - skip-release
+      - internal
+      - wontfix
+      - duplicate
+    authors:
+      - dependabot
+      - dependabot[bot]
+      - renovate
+      - renovate[bot]
+      - github-actions
+      - github-actions[bot]
+
+  categories:
+    - title: Breaking Changes
+      labels:
+        - breaking
+        - breaking-change
+        - type: breaking
+
+    - title: Features
+      labels:
+        - feature
+        - enhancement
+        - type: feature
+        - type: enhancement
+
+    - title: Bug Fixes
+      labels:
+        - bugfix
+        - fix
+        - bug
+        - type: bug
+
+    - title: Performance
+      labels:
+        - performance
+        - perf
+        - type: performance
+
+    - title: Documentation
+      labels:
+        - documentation
+        - docs
+        - type: documentation
+
+    - title: Dependencies
+      labels:
+        - dependencies
+        - dependency-update
+        - type: dependencies
+        - type: chore
+
+    - title: Security
+      labels:
+        - security
+        - type: security
+
+    - title: Maintenance
+      labels:
+        - chore
+        - maintenance
+        - refactor
+        - type: maintenance

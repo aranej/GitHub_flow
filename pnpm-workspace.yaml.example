@@ -1,0 +1,17 @@
+packages:
+  - 'packages/*'
+  - 'examples/*'
+  - 'tools/*'
+
+# Install peer dependencies from root workspace
+shared-workspace-lockfile: true
+
+# Ensure consistent versions across workspace
+pnpmfile: pnpmfile.js
+
+# Installation settings
+auto-install-peers: true
+dedupe-peer-dependents: false
+
+# Recursive scripts
+recursive: true

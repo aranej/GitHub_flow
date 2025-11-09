@@ -1,0 +1,592 @@
+# GitHub Actions Optimization Templates - 2025
+
+## Template 1: Cost-Optimized Node.js CI/CD with Caching
+
+---
+name: Optimized Node.js CI
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1  # Shallow clone for speed
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - run: npm ci
+      - run: npm run lint
+
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18, 20]
+        exclude:
+          # Only test main versions to save cost
+          - node-version: 18
+            os: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - run: npm ci
+      - run: npm test -- --coverage
+      - uses: codecov/codecov-action@v3
+        if: matrix.node-version == '20'
+
+  build:
+    needs: [lint, test]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - run: npm ci
+      - run: npm run build
+
+      - uses: actions/cache@v4
+        with:
+          path: dist
+          key: ${{ runner.os }}-build-${{ github.sha }}
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist-${{ github.run_id }}
+          path: dist
+          retention-days: 1
+
+---
+
+## Template 2: Docker Multi-Platform Build with Layer Caching
+
+---
+name: Docker Build & Push
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+    branches: [main]
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Container Registry
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=ref,event=branch
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=sha
+
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+---
+
+## Template 3: Reusable Matrix Testing Workflow
+
+---
+name: Reusable Test Matrix
+
+on:
+  workflow_call:
+    inputs:
+      node-versions:
+        description: 'Node versions to test'
+        required: false
+        type: string
+        default: '["18", "20"]'
+      test-command:
+        description: 'Test command'
+        required: false
+        type: string
+        default: 'npm test'
+      cache-path:
+        description: 'Cache path'
+        required: false
+        type: string
+        default: '~/.npm'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: ${{ fromJson(inputs.node-versions) }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: ${{ inputs.test-command }}
+
+      - name: Upload coverage
+        if: matrix.node-version == '20'
+        uses: codecov/codecov-action@v3
+
+---
+
+## Template 4: Self-Hosted Runner with Auto-Scaling
+
+---
+name: Self-Hosted Build
+on: [push]
+
+jobs:
+  build:
+    runs-on: [self-hosted, linux, x64]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build on self-hosted
+        run: |
+          docker build -t myapp:${{ github.sha }} .
+          docker run --rm myapp:${{ github.sha }} npm test
+
+      - name: Push to registry
+        if: github.ref == 'refs/heads/main'
+        run: |
+          docker tag myapp:${{ github.sha }} myregistry/myapp:latest
+          docker push myregistry/myapp:latest
+
+---
+
+## Template 5: Secure Deployment with OIDC and Environment Approval
+
+---
+name: Secure Deployment
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - id: version
+        run: echo "version=$(date +%s)" >> $GITHUB_OUTPUT
+
+      - run: npm ci && npm run build
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist
+
+  deploy-staging:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: staging
+      url: https://staging.example.com
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::123456789:role/staging-deploy
+          aws-region: us-east-1
+
+      - run: aws s3 sync . s3://staging-bucket/
+
+  deploy-production:
+    needs: [build, deploy-staging]
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://example.com
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::123456789:role/production-deploy
+          aws-region: us-east-1
+
+      - run: aws s3 sync . s3://production-bucket/
+
+      - name: Invalidate CloudFront
+        run: aws cloudfront create-invalidation --distribution-id ${{ secrets.CF_DISTRIBUTION_ID }} --paths "/*"
+
+---
+
+## Template 6: Automated Secret Rotation
+
+---
+name: Rotate Secrets
+on:
+  schedule:
+    - cron: '0 0 1 * *'  # Monthly
+  workflow_dispatch:
+
+jobs:
+  rotate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::123456789:role/secret-rotation
+          aws-region: us-east-1
+
+      - name: Rotate database credentials
+        run: |
+          # Generate new password
+          NEW_PASSWORD=$(openssl rand -base64 32)
+
+          # Update in database
+          aws secretsmanager update-secret \
+            --secret-id prod/db-password \
+            --secret-string "{\"username\":\"admin\",\"password\":\"$NEW_PASSWORD\"}"
+
+          # Trigger application restart
+          aws ssm send-command \
+            --document-name "AWS-RunShellScript" \
+            --parameters 'commands=["systemctl restart myapp"]' \
+            --targets "Key=tag:Environment,Values=production"
+
+      - name: Send notification
+        run: |
+          curl -X POST ${{ secrets.SLACK_WEBHOOK }} \
+            -H 'Content-Type: application/json' \
+            -d '{"text":"Secrets rotated successfully"}'
+
+---
+
+## Template 7: Multi-Job Parallelization Pattern
+
+---
+name: Parallel Workflow
+on: [push]
+
+jobs:
+  # Analysis jobs (parallel)
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci && npm run lint
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci && npm test
+
+  security:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm audit
+
+  # Build after all checks pass
+  build:
+    needs: [lint, test, security]
+    runs-on: ubuntu-latest
+    outputs:
+      artifact: ${{ steps.upload.outputs.artifact-id }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci && npm run build
+      - id: upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-${{ github.sha }}
+          path: dist
+
+  # Parallel deployment jobs (depend on build)
+  deploy-staging:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: build-${{ github.sha }}
+      - run: echo "Deploying to staging..."
+
+  deploy-cdn:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: build-${{ github.sha }}
+      - run: echo "Deploying to CDN..."
+
+  # Final notification
+  notify:
+    needs: [deploy-staging, deploy-cdn]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Deployment complete"
+
+---
+
+## Template 8: Composite Action for Common Tasks
+
+---
+# .github/actions/deploy/action.yml
+name: Deploy Application
+description: Deploy application to AWS S3 with CloudFront invalidation
+
+inputs:
+  aws-region:
+    description: AWS region
+    required: true
+    default: us-east-1
+  s3-bucket:
+    description: S3 bucket name
+    required: true
+  cloudfront-distribution:
+    description: CloudFront distribution ID
+    required: false
+  source-path:
+    description: Source directory to deploy
+    required: false
+    default: dist
+
+outputs:
+  deployment-url:
+    description: Deployment URL
+    value: https://${{ inputs.s3-bucket }}.s3.amazonaws.com
+
+runs:
+  using: composite
+  steps:
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-region: ${{ inputs.aws-region }}
+        role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+
+    - name: Deploy to S3
+      shell: bash
+      run: |
+        aws s3 sync ${{ inputs.source-path }}/ \
+          s3://${{ inputs.s3-bucket }}/ \
+          --delete \
+          --cache-control "public, max-age=3600"
+
+    - name: Invalidate CloudFront
+      if: inputs.cloudfront-distribution != ''
+      shell: bash
+      run: |
+        aws cloudfront create-invalidation \
+          --distribution-id ${{ inputs.cloudfront-distribution }} \
+          --paths "/*"
+
+---
+
+## Template 9: Conditional Workflow Execution Based on Files Changed
+
+---
+name: Conditional Workflow
+on: [push, pull_request]
+
+jobs:
+  check-paths:
+    runs-on: ubuntu-latest
+    outputs:
+      frontend: ${{ steps.changed.outputs.frontend }}
+      backend: ${{ steps.changed.outputs.backend }}
+      infra: ${{ steps.changed.outputs.infra }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: dorny/paths-filter@v2
+        id: changed
+        with:
+          filters: |
+            frontend:
+              - 'src/**'
+              - 'package.json'
+            backend:
+              - 'api/**'
+            infra:
+              - 'terraform/**'
+
+  test-frontend:
+    needs: check-paths
+    if: needs.check-paths.outputs.frontend == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci && npm run test
+
+  test-backend:
+    needs: check-paths
+    if: needs.check-paths.outputs.backend == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo "Testing backend..."
+
+  validate-infra:
+    needs: check-paths
+    if: needs.check-paths.outputs.infra == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo "Validating infrastructure..."
+
+---
+
+## Template 10: Cost Monitoring and Alerts
+
+---
+name: Monitor GitHub Actions Costs
+on:
+  schedule:
+    - cron: '0 9 * * 1'  # Weekly on Monday morning
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch Actions usage
+        run: |
+          # Requires gh CLI with appropriate permissions
+          gh api repos/${{ github.repository }}/actions/billing/usage \
+            --jq '.billing | {total_billable_minutes, total_paid_minutes}' \
+            > usage.json
+
+      - name: Parse and alert
+        run: |
+          PAID_MINUTES=$(jq '.total_paid_minutes' usage.json)
+
+          if [ "$PAID_MINUTES" -gt 1000 ]; then
+            curl -X POST ${{ secrets.SLACK_WEBHOOK }} \
+              -H 'Content-Type: application/json' \
+              -d "{\"text\":\"⚠️ GitHub Actions overage: $PAID_MINUTES minutes\"}"
+          fi
+
+      - name: Generate report
+        run: |
+          echo "## GitHub Actions Cost Report" > report.md
+          echo "" >> report.md
+          jq -r '.[] | "- \(.): \(.)"' usage.json >> report.md
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cost-report
+          path: report.md
+
+---
