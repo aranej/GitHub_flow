@@ -395,7 +395,7 @@ A: [Advanced Debugging Guide](guides/advanced/ADVANCED_DEBUGGING_GUIDE_2025.md)
 
 ### Documentation Index
 - **[Master Index](docs/indexes/MASTER_INDEX.md)** - All 88 documents organized
-- **[Quick Reference](QUICK_REFERENCE.md)** - Command cheat sheets
+- **[Quick Reference](docs/reference/QUICK_REFERENCE.md)** - Command cheat sheets
 - **[Implementation Roadmap](guides/intermediate/IMPLEMENTATION_ROADMAP.md)** - Rollout plan
 
 ---
