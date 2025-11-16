@@ -14,26 +14,26 @@
 **Choose your path:**
 
 ### 🟢 I'm a Complete Beginner
-**→ Start:** [GitHub Essentials Starter Pack](GITHUB_ESSENTIALS_STARTER_PACK.md) (6.5 hours)
+**→ Start:** [GitHub Essentials Starter Pack](guides/beginner/GITHUB_ESSENTIALS_STARTER_PACK.md) (6.5 hours)
 - Git fundamentals (repository, commit, branch, merge)
 - GitHub Desktop mastery
 - Pull Requests and code review
 - Daily workflow best practices
 
-**→ Then:** [Quick Start Guide](QUICK_START_GUIDE.md) (45 minutes)
+**→ Then:** [Quick Start Guide](guides/beginner/QUICK_START_GUIDE.md) (45 minutes)
 - Hands-on exercises
 - First Pull Request walkthrough
 
 ---
 
 ### 🟡 I Know Git Basics, Want to Level Up
-**→ Start:** [Implementation Roadmap](IMPLEMENTATION_ROADMAP.md)
+**→ Start:** [Implementation Roadmap](guides/intermediate/IMPLEMENTATION_ROADMAP.md)
 - 8-week professional workflow rollout
 - GitHub Flow vs Trunk-based development
 - CI/CD automation
 - Team collaboration patterns
 
-**→ Browse:** [Master Index](MASTER_INDEX.md)
+**→ Browse:** [Master Index](docs/indexes/MASTER_INDEX.md)
 - All 88 documents categorized
 - Learning paths by role
 - 20 research areas covered
@@ -42,10 +42,10 @@
 
 ### 🔴 I'm a Power User / DevOps Engineer
 **→ Jump to:** Advanced Topics
-- [GitHub Actions Optimization](GITHUB_ACTIONS_OPTIMIZATION_2025.md) - 80-90% cost reduction
-- [Monorepo Workflows](MONOREPO_WORKFLOWS_2025.md) - Large-scale projects
-- [Enterprise Security](ENTERPRISE_SECURITY_GUIDE_2025.md) - CodeQL, SAST/DAST
-- [LLM Git Workflow](LLM_GIT_WORKFLOW_GUIDE_2025.md) - AI-assisted development
+- [GitHub Actions Optimization](guides/github-actions/GITHUB_ACTIONS_OPTIMIZATION_2025.md) - 80-90% cost reduction
+- [Monorepo Workflows](guides/advanced/MONOREPO_WORKFLOWS_2025.md) - Large-scale projects
+- [Enterprise Security](guides/advanced/ENTERPRISE_SECURITY_GUIDE_2025.md) - CodeQL, SAST/DAST
+- [LLM Git Workflow](guides/advanced/LLM_GIT_WORKFLOW_GUIDE_2025.md) - AI-assisted development
 
 **→ Automation Scripts:** [scripts/](scripts/)
 - PR automation utilities
@@ -59,64 +59,64 @@
 ### Core Guides (Start Here)
 | Guide | Purpose | Time | Level |
 |-------|---------|------|-------|
-| [GitHub Essentials Starter Pack](GITHUB_ESSENTIALS_STARTER_PACK.md) | Complete beginner course | 6.5h | 🟢 Beginner |
-| [Quick Start Guide](QUICK_START_GUIDE.md) | Hands-on walkthrough | 45m | 🟢 Beginner |
-| [Implementation Roadmap](IMPLEMENTATION_ROADMAP.md) | 8-week rollout plan | 2h read | 🟡 Intermediate |
-| [Master Index](MASTER_INDEX.md) | Navigate all 88 docs | 15m | All levels |
+| [GitHub Essentials Starter Pack](guides/beginner/GITHUB_ESSENTIALS_STARTER_PACK.md) | Complete beginner course | 6.5h | 🟢 Beginner |
+| [Quick Start Guide](guides/beginner/QUICK_START_GUIDE.md) | Hands-on walkthrough | 45m | 🟢 Beginner |
+| [Implementation Roadmap](guides/intermediate/IMPLEMENTATION_ROADMAP.md) | 8-week rollout plan | 2h read | 🟡 Intermediate |
+| [Master Index](docs/indexes/MASTER_INDEX.md) | Navigate all 88 docs | 15m | All levels |
 
 ### Git Workflows
 | Guide | What You'll Learn |
 |-------|-------------------|
-| [Git Workflows 2025 Research](GIT_WORKFLOWS_2025_RESEARCH.md) | GitHub Flow, Trunk-based, GitFlow comparison |
-| [Workflow Decision Matrix](WORKFLOW_DECISION_MATRIX.md) | Choose the right workflow for your team |
-| [Workflow Implementation Guides](WORKFLOW_IMPLEMENTATION_GUIDES.md) | Step-by-step setup instructions |
+| [Git Workflows 2025 Research](guides/workflows/GIT_WORKFLOWS_2025_RESEARCH.md) | GitHub Flow, Trunk-based, GitFlow comparison |
+| [Workflow Decision Matrix](guides/workflows/WORKFLOW_DECISION_MATRIX.md) | Choose the right workflow for your team |
+| [Workflow Implementation Guides](guides/intermediate/WORKFLOW_IMPLEMENTATION_GUIDES.md) | Step-by-step setup instructions |
 
 ### GitHub CLI & Automation
 | Guide | What You'll Learn |
 |-------|-------------------|
-| [GH CLI Advanced 2025](GH_CLI_ADVANCED_2025.md) | PR/Issue/Workflow automation |
-| [GH CLI Quick Reference](GH_CLI_QUICK_REFERENCE.md) | Command cheat sheet |
-| [Real-World Examples](REAL_WORLD_EXAMPLES.md) | 8 production-ready scripts |
+| [GH CLI Advanced 2025](docs/research/GH_CLI_ADVANCED_2025.md) | PR/Issue/Workflow automation |
+| [GH CLI Quick Reference](docs/reference/GH_CLI_QUICK_REFERENCE.md) | Command cheat sheet |
+| [Real-World Examples](scripts/examples/REAL_WORLD_EXAMPLES.md) | 8 production-ready scripts |
 
 ### GitHub Actions & CI/CD
 | Guide | What You'll Learn |
 |-------|-------------------|
-| [GitHub Actions Optimization](GITHUB_ACTIONS_OPTIMIZATION_2025.md) | 80-90% cost reduction techniques |
-| [GitHub Actions README](GITHUB_ACTIONS_README.md) | Getting started with CI/CD |
-| [Actions Implementation Checklist](GITHUB_ACTIONS_IMPLEMENTATION_CHECKLIST.md) | Step-by-step setup |
+| [GitHub Actions Optimization](guides/github-actions/GITHUB_ACTIONS_OPTIMIZATION_2025.md) | 80-90% cost reduction techniques |
+| [GitHub Actions README](guides/github-actions/GITHUB_ACTIONS_README.md) | Getting started with CI/CD |
+| [Actions Implementation Checklist](guides/github-actions/GITHUB_ACTIONS_IMPLEMENTATION_CHECKLIST.md) | Step-by-step setup |
 
 ### Code Review & Quality
 | Guide | What You'll Learn |
 |-------|-------------------|
-| [CODEOWNERS Quick Start](CODEOWNERS_QUICK_START.md) | Automated review assignment |
-| [CODEOWNERS Research 2025](CODEOWNERS_RESEARCH_2025.md) | Advanced patterns |
-| [Collaborative Coding 2025](COLLABORATIVE_CODING_2025.md) | Team workflow best practices |
+| [CODEOWNERS Quick Start](guides/codeowners/CODEOWNERS_QUICK_START.md) | Automated review assignment |
+| [CODEOWNERS Research 2025](guides/codeowners/CODEOWNERS_RESEARCH_2025.md) | Advanced patterns |
+| [Collaborative Coding 2025](guides/intermediate/COLLABORATIVE_CODING_2025.md) | Team workflow best practices |
 
 ### Security & Compliance
 | Guide | What You'll Learn |
 |-------|-------------------|
-| [Enterprise Security Guide](ENTERPRISE_SECURITY_GUIDE_2025.md) | CodeQL, Dependabot, SAST/DAST |
-| [Security Architecture Patterns](SECURITY_ARCHITECTURE_PATTERNS.md) | Zero-trust, secret scanning |
-| [Security Implementation Templates](SECURITY_IMPLEMENTATION_TEMPLATES.md) | Ready-to-use configs |
+| [Enterprise Security Guide](guides/advanced/ENTERPRISE_SECURITY_GUIDE_2025.md) | CodeQL, Dependabot, SAST/DAST |
+| [Security Architecture Patterns](guides/security/SECURITY_ARCHITECTURE_PATTERNS.md) | Zero-trust, secret scanning |
+| [Security Implementation Templates](guides/security/SECURITY_IMPLEMENTATION_TEMPLATES.md) | Ready-to-use configs |
 
 ### Monorepo & Scale
 | Guide | What You'll Learn |
 |-------|-------------------|
-| [Monorepo Workflows 2025](MONOREPO_WORKFLOWS_2025.md) | Managing large-scale projects |
-| [Monorepo Quick Reference](MONOREPO_QUICK_REFERENCE.md) | Common commands |
-| [Monorepo Config Templates](MONOREPO_CONFIG_TEMPLATES.md) | Nx, Turborepo, Lerna |
+| [Monorepo Workflows 2025](guides/advanced/MONOREPO_WORKFLOWS_2025.md) | Managing large-scale projects |
+| [Monorepo Quick Reference](guides/advanced/MONOREPO_QUICK_REFERENCE.md) | Common commands |
+| [Monorepo Config Templates](guides/advanced/MONOREPO_CONFIG_TEMPLATES.md) | Nx, Turborepo, Lerna |
 
 ### Release Management
 | Guide | What You'll Learn |
 |-------|-------------------|
-| [Release Automation 2025](RELEASE_AUTOMATION_2025.md) | Semantic versioning, changelogs |
-| [Release Automation Reference](RELEASE_AUTOMATION_REFERENCE.md) | Quick commands |
+| [Release Automation 2025](guides/releases/RELEASE_AUTOMATION_2025.md) | Semantic versioning, changelogs |
+| [Release Automation Reference](guides/releases/RELEASE_AUTOMATION_REFERENCE.md) | Quick commands |
 | [GitHub Releases API](GITHUB_RELEASES_API.md) | Programmatic releases |
 
 ### Advanced Topics
 | Guide | What You'll Learn |
 |-------|-------------------|
-| [LLM Git Workflow Guide](LLM_GIT_WORKFLOW_GUIDE_2025.md) | AI-assisted development (Claude, Copilot) |
+| [LLM Git Workflow Guide](guides/advanced/LLM_GIT_WORKFLOW_GUIDE_2025.md) | AI-assisted development (Claude, Copilot) |
 | [Git Dependency Management](GIT_DEPENDENCY_MANAGEMENT_2025_GUIDE.md) | Submodules, subtrees, worktrees |
 | [Advanced Debugging Guide](ADVANCED_DEBUGGING_GUIDE_2025.md) | Troubleshooting complex issues |
 
@@ -132,8 +132,8 @@
 
 ### 🔧 DevOps / Platform Engineer
 1. [GitHub Actions Optimization](GITHUB_ACTIONS_OPTIMIZATION_2025.md) - CI/CD
-2. [Monorepo Workflows](MONOREPO_WORKFLOWS_2025.md) - Scale
-3. [Release Automation](RELEASE_AUTOMATION_2025.md) - Deployments
+2. [Monorepo Workflows](guides/advanced/MONOREPO_WORKFLOWS_2025.md) - Scale
+3. [Release Automation](guides/releases/RELEASE_AUTOMATION_2025.md) - Deployments
 4. [Enterprise Security Guide](ENTERPRISE_SECURITY_GUIDE_2025.md) - Security
 
 ### 👔 Engineering Manager
@@ -145,7 +145,7 @@
 ### 🏢 Enterprise Architect
 1. [Master Index](MASTER_INDEX.md) - Full overview
 2. [Enterprise Security Guide](ENTERPRISE_SECURITY_GUIDE_2025.md) - Security
-3. [Monorepo Workflows](MONOREPO_WORKFLOWS_2025.md) - Scale
+3. [Monorepo Workflows](guides/advanced/MONOREPO_WORKFLOWS_2025.md) - Scale
 4. [Git Workflows 2025 Research](GIT_WORKFLOWS_2025_RESEARCH.md) - Patterns
 
 ---
@@ -349,7 +349,7 @@ gh pr list
 
 ### "I want to automate Pull Request workflows"
 1. Read: [GH CLI Advanced 2025](GH_CLI_ADVANCED_2025.md)
-2. Copy: [pr-automation-utils.sh](pr-automation-utils.sh)
+2. Copy: [pr-automation-utils.sh](scripts/automation/pr-automation-utils.sh)
 3. Adapt: Auto-Review Pipeline from [Real-World Examples](REAL_WORLD_EXAMPLES.md)
 
 ### "I need to set up CI/CD for my team"
@@ -358,9 +358,9 @@ gh pr list
 3. Optimize: [GitHub Actions Optimization](GITHUB_ACTIONS_OPTIMIZATION_2025.md)
 
 ### "I'm managing a monorepo"
-1. Read: [Monorepo Workflows 2025](MONOREPO_WORKFLOWS_2025.md)
+1. Read: [Monorepo Workflows 2025](guides/advanced/MONOREPO_WORKFLOWS_2025.md)
 2. Choose: Nx vs Turborepo vs Lerna comparison
-3. Configure: [Monorepo Config Templates](MONOREPO_CONFIG_TEMPLATES.md)
+3. Configure: [Monorepo Config Templates](guides/advanced/MONOREPO_CONFIG_TEMPLATES.md)
 
 ### "I need to improve code review process"
 1. Read: [CODEOWNERS Quick Start](CODEOWNERS_QUICK_START.md)
@@ -440,14 +440,14 @@ This documentation is provided as-is for educational and professional use.
 
 ### Advanced Topics
 - [GitHub Actions Optimization](GITHUB_ACTIONS_OPTIMIZATION_2025.md)
-- [Monorepo Workflows](MONOREPO_WORKFLOWS_2025.md)
+- [Monorepo Workflows](guides/advanced/MONOREPO_WORKFLOWS_2025.md)
 - [Enterprise Security Guide](ENTERPRISE_SECURITY_GUIDE_2025.md)
-- [LLM Git Workflow Guide](LLM_GIT_WORKFLOW_GUIDE_2025.md)
+- [LLM Git Workflow Guide](guides/advanced/LLM_GIT_WORKFLOW_GUIDE_2025.md)
 
 ### Automation Scripts
-- [pr-automation-utils.sh](pr-automation-utils.sh)
-- [issue-automation-utils.sh](issue-automation-utils.sh)
-- [workflow-automation-utils.sh](workflow-automation-utils.sh)
+- [pr-automation-utils.sh](scripts/automation/pr-automation-utils.sh)
+- [issue-automation-utils.sh](scripts/automation/issue-automation-utils.sh)
+- [workflow-automation-utils.sh](scripts/automation/workflow-automation-utils.sh)
 - [Real-World Examples](REAL_WORLD_EXAMPLES.md)
 
 ### External Resources
