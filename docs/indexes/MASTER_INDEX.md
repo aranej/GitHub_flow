@@ -16,7 +16,7 @@
 
 ## 🎯 QUICK START GUIDE
 
-**→ Dokument:** `QUICK_START_GUIDE.md`
+**→ Dokument:** `guides/beginner/QUICK_START_GUIDE.md`
 
 **15-minútový prehľad pre okamžité začatie práce:**
 - Základné Git operácie (clone, commit, push, pull)
@@ -31,7 +31,7 @@
 
 ## 🚀 IMPLEMENTATION ROADMAP
 
-**→ Dokument:** `IMPLEMENTATION_ROADMAP.md`
+**→ Dokument:** `guides/intermediate/IMPLEMENTATION_ROADMAP.md`
 
 **Fázovaný plán nasadenia profesionálnych workflow:**
 
@@ -65,7 +65,7 @@
 
 ## 📚 GITHUB STARTER PACK (PRE ZAČIATOČNÍKOV)
 
-**→ Dokument:** `GITHUB_ESSENTIALS_STARTER_PACK.md`
+**→ Dokument:** `guides/beginner/GITHUB_ESSENTIALS_STARTER_PACK.md`
 
 **Širšie základy pre profesionálnu prácu s GitHubom:**
 
@@ -104,18 +104,18 @@
 ### 🏗️ 1. INFRAŠTRUKTÚRA & SETUP
 
 #### Git Workflows & Branching
-- **GIT_WORKFLOWS_2025_RESEARCH.md** (1,276 riadkov)
+- **guides/workflows/GIT_WORKFLOWS_2025_RESEARCH.md** (1,276 riadkov)
   - Gitflow vs GitHub Flow vs Trunk-based Development
   - Team size considerations (2 → 50,000+ developers)
   - AI coding impact analysis
   - Decision matrices a migration paths
 
-- **WORKFLOW_DECISION_MATRIX.md** (674 riadkov)
+- **guides/workflows/WORKFLOW_DECISION_MATRIX.md** (674 riadkov)
   - Decision trees pre výber workflow
   - Scenario-based quick selection
   - Weighted scoring matrix
 
-- **WORKFLOW_IMPLEMENTATION_GUIDES.md** (995 riadkov)
+- **guides/intermediate/WORKFLOW_IMPLEMENTATION_GUIDES.md** (995 riadkov)
   - Step-by-step setup guides
   - Daily workflow examples
   - Troubleshooting
@@ -125,18 +125,18 @@
 ---
 
 #### GitHub Desktop & Visual Tools
-- **GIT_TOOLS_COMPARISON_2025.md** (1,108 riadkov)
+- **docs/research/GIT_TOOLS_COMPARISON_2025.md** (1,108 riadkov)
   - GitHub Desktop vs GitKraken vs Sourcetree vs Tower
   - Feature comparison matrix
   - LLM integration scoring
   - Use case recommendations
 
-- **GIT_TOOLS_QUICK_REFERENCE.md** (358 riadkov)
+- **docs/reference/GIT_TOOLS_QUICK_REFERENCE.md** (358 riadkov)
   - Decision tree (GUI vs CLI)
   - Performance benchmarks
   - Quick troubleshooting
 
-- **LLM_GIT_WORKFLOW_GUIDE_2025.md** (1,017 riadkov)
+- **guides/advanced/LLM_GIT_WORKFLOW_GUIDE_2025.md** (1,017 riadkov)
   - 6 complete workflows pre AI-assisted coding
   - GitKraken MCP + Claude Code
   - VS Code + Copilot patterns
@@ -176,7 +176,7 @@
   - Commitizen + commitlint setup
   - Semantic-release automation
 
-- **RELEASE_AUTOMATION_2025.md** (complete guide)
+- **guides/releases/RELEASE_AUTOMATION_2025.md** (complete guide)
   - Automated versioning
   - Changelog generation
   - Multi-package releases
@@ -191,12 +191,12 @@
 ---
 
 #### Code Ownership & Review
-- **CODEOWNERS_RESEARCH_2025.md** (39 KB)
+- **guides/codeowners/CODEOWNERS_RESEARCH_2025.md** (39 KB)
   - Team organization strategies
   - AI-generated code ownership (2025 critical)
   - Review rotation patterns
 
-- **TEMPLATES_CODEOWNERS_PATTERNS.md** (22 KB)
+- **docs/templates/TEMPLATES_CODEOWNERS_PATTERNS.md** (22 KB)
   - 8 ready-to-use templates (Startup → Enterprise)
   - GitHub Actions workflows
   - Escalation rules
@@ -234,18 +234,18 @@
 ### 🔐 3. SECURITY & COMPLIANCE
 
 #### Security Scanning & Protection
-- **ENTERPRISE_SECURITY_GUIDE_2025.md** (38 KB)
+- **guides/advanced/ENTERPRISE_SECURITY_GUIDE_2025.md** (38 KB)
   - Advanced branch protection
   - GitHub Rulesets (2025)
   - Push protection & secret scanning
   - Compliance mappings (SOC 2, HIPAA, PCI DSS, ISO 27001)
 
-- **SECURITY_IMPLEMENTATION_TEMPLATES.md** (35 KB)
+- **guides/security/SECURITY_IMPLEMENTATION_TEMPLATES.md** (35 KB)
   - 8 production-ready templates
   - Terraform configurations
   - Python automation scripts
 
-- **SECURITY_ARCHITECTURE_PATTERNS.md** (33 KB)
+- **guides/security/SECURITY_ARCHITECTURE_PATTERNS.md** (33 KB)
   - 6 enterprise patterns
   - Zero-trust access control
   - Incident response automation
@@ -263,18 +263,18 @@
 ### ⚙️ 4. AUTOMATION & CI/CD
 
 #### GitHub Actions Optimization
-- **GITHUB_ACTIONS_OPTIMIZATION_2025.md** (31 KB)
+- **guides/github-actions/GITHUB_ACTIONS_OPTIMIZATION_2025.md** (31 KB)
   - Caching strategies (all languages)
   - Matrix builds optimization
   - Self-hosted runners (AWS, Kubernetes)
   - Cost optimization (80-90% reduction)
 
-- **COST_OPTIMIZATION_CALCULATOR.md** (18 KB)
+- **docs/COST_OPTIMIZATION_CALCULATOR.md** (18 KB)
   - ROI calculators
   - Scenario analysis
   - Break-even timeline
 
-- **GITHUB_ACTIONS_IMPLEMENTATION_CHECKLIST.md** (15 KB)
+- **guides/github-actions/GITHUB_ACTIONS_IMPLEMENTATION_CHECKLIST.md** (15 KB)
   - 4-phase implementation plan
   - Technology-specific checklists
 
@@ -286,13 +286,13 @@
 ---
 
 #### GitHub CLI & Automation
-- **GH_CLI_ADVANCED_2025.md** (25 KB)
+- **docs/research/GH_CLI_ADVANCED_2025.md** (25 KB)
   - PR management automation
   - Issue tracking workflows
   - CI/CD integration
   - AI integration (Copilot CLI, MCP)
 
-- **REAL_WORLD_EXAMPLES.md** (19 KB)
+- **scripts/examples/REAL_WORLD_EXAMPLES.md** (19 KB)
   - 8 complete automation scripts
   - Daily standup reports
   - Release manager
@@ -306,13 +306,13 @@
 ---
 
 #### Release Automation
-- **RELEASE_AUTOMATION_2025.md** (complete system)
+- **guides/releases/RELEASE_AUTOMATION_2025.md** (complete system)
   - Semantic-release deep dive
   - Changelog generation
   - Version bumping strategies
   - Multi-package releases
 
-- **GITHUB_RELEASES_API.md** (API reference)
+- **guides/releases/GITHUB_RELEASES_API.md** (API reference)
   - REST API v3 usage
   - GraphQL examples
   - Authentication methods
@@ -330,18 +330,18 @@
 ### 🏢 5. ENTERPRISE & SCALE
 
 #### Monorepo Workflows
-- **MONOREPO_WORKFLOWS_2025.md** (33 KB)
+- **guides/advanced/MONOREPO_WORKFLOWS_2025.md** (33 KB)
   - Path-based workflows
   - Selective CI/CD triggering
   - Nx vs Turborepo vs Lerna comparison
   - AI coding in monorepos
 
-- **MONOREPO_CONFIG_TEMPLATES.md** (29 KB)
+- **docs/templates/MONOREPO_CONFIG_TEMPLATES.md** (29 KB)
   - Production-ready configs
   - nx.json, turbo.json templates
   - GitHub Actions workflows
 
-- **MONOREPO_QUICK_REFERENCE.md** (15 KB)
+- **docs/reference/MONOREPO_QUICK_REFERENCE.md** (15 KB)
   - NX commands (29 categories)
   - Turborepo commands
   - Performance optimization
@@ -351,17 +351,17 @@
 ---
 
 #### Dependency Management
-- **GIT_DEPENDENCY_MANAGEMENT_2025_GUIDE.md** (comprehensive)
+- **docs/research/GIT_DEPENDENCY_MANAGEMENT_2025_GUIDE.md** (comprehensive)
   - Git submodules best practices
   - Git subtree guide
   - Monorepo vs multi-repo
   - Package-based approaches
 
-- **DEPENDENCY_DECISION_MATRIX.md** (decision trees)
+- **guides/dependencies/DEPENDENCY_DECISION_MATRIX.md** (decision trees)
   - Scenario-based recommendations
   - Migration effort estimation
 
-- **DEPENDENCY_COMMANDS_REFERENCE.md** (practical commands)
+- **docs/reference/DEPENDENCY_COMMANDS_REFERENCE.md** (practical commands)
   - 20+ troubleshooting solutions
   - Migration scripts
 
@@ -392,7 +392,7 @@
 ### 🛠️ 6. DEVELOPMENT & DEBUGGING
 
 #### Git Debugging & Troubleshooting
-- **ADVANCED_DEBUGGING_GUIDE_2025.md** (comprehensive)
+- **guides/advanced/ADVANCED_DEBUGGING_GUIDE_2025.md** (comprehensive)
   - Git bisect automation
   - CI/CD integration
   - Git blame alternatives
@@ -428,7 +428,7 @@
 ---
 
 #### Collaborative Coding
-- **COLLABORATIVE_CODING_2025.md** (38 KB)
+- **guides/intermediate/COLLABORATIVE_CODING_2025.md** (38 KB)
   - VS Code Live Share + Git
   - GitHub Codespaces
   - Gitpod → Ona rebrand
@@ -458,16 +458,16 @@
 - Mean time to recovery
 
 **Kde nájsť:**
-- `GIT_WORKFLOWS_2025_RESEARCH.md` - DORA metrics by workflow
-- `GITHUB_ACTIONS_OPTIMIZATION_2025.md` - Performance benchmarks
-- `COST_OPTIMIZATION_CALCULATOR.md` - ROI tracking
+- `guides/workflows/GIT_WORKFLOWS_2025_RESEARCH.md` - DORA metrics by workflow
+- `guides/github-actions/GITHUB_ACTIONS_OPTIMIZATION_2025.md` - Performance benchmarks
+- `docs/COST_OPTIMIZATION_CALCULATOR.md` - ROI tracking
 
 ---
 
 ### 🤖 8. AI & LLM INTEGRATION
 
 #### AI-Assisted Development
-- **LLM_GIT_WORKFLOW_GUIDE_2025.md** (6 workflows)
+- **guides/advanced/LLM_GIT_WORKFLOW_GUIDE_2025.md** (6 workflows)
   - GitKraken MCP + Claude Code
   - VS Code + Claude Code
   - GitHub Desktop + CLI
@@ -497,18 +497,18 @@ GITHUB_ESSENTIALS_STARTER_PACK.md        ← Pre začiatočníkov
 
 ### 📁 Workflows & Branching (9 súborov)
 ```
-GIT_WORKFLOWS_2025_RESEARCH.md           ← Complete comparison
-WORKFLOW_DECISION_MATRIX.md              ← Decision trees
-WORKFLOW_IMPLEMENTATION_GUIDES.md        ← Setup guides
+guides/workflows/GIT_WORKFLOWS_2025_RESEARCH.md           ← Complete comparison
+guides/workflows/WORKFLOW_DECISION_MATRIX.md              ← Decision trees
+guides/intermediate/WORKFLOW_IMPLEMENTATION_GUIDES.md        ← Setup guides
 WORKFLOW_PATTERNS_QUICK_GUIDE.md         ← 4 patterns
 README_GIT_WORKFLOWS_2025.md             ← Navigation
 ```
 
 ### 📁 Git Tools (6 súborov)
 ```
-GIT_TOOLS_COMPARISON_2025.md             ← GUI tools comparison
-GIT_TOOLS_QUICK_REFERENCE.md             ← Quick lookup
-LLM_GIT_WORKFLOW_GUIDE_2025.md           ← 6 AI workflows
+docs/research/GIT_TOOLS_COMPARISON_2025.md             ← GUI tools comparison
+docs/reference/GIT_TOOLS_QUICK_REFERENCE.md             ← Quick lookup
+guides/advanced/LLM_GIT_WORKFLOW_GUIDE_2025.md           ← 6 AI workflows
 README_GIT_TOOLS_2025.md                 ← Tool selection guide
 ```
 
@@ -527,10 +527,10 @@ Configs:
 ### 📁 Commit Standards & Release (6 súborov)
 ```
 COMMIT_MESSAGE_STANDARDS_2025.md         ← Standards guide
-RELEASE_AUTOMATION_2025.md               ← Complete system
+guides/releases/RELEASE_AUTOMATION_2025.md               ← Complete system
 RELEASE_AUTOMATION_INDEX.md              ← Navigation
 RELEASE_AUTOMATION_REFERENCE.md          ← Quick reference
-GITHUB_RELEASES_API.md                   ← API guide
+guides/releases/GITHUB_RELEASES_API.md                   ← API guide
 SETUP_GUIDE.md                           ← Implementation
 
 Configs:
@@ -539,10 +539,10 @@ Configs:
 
 ### 📁 Code Ownership (5 súborov)
 ```
-CODEOWNERS_RESEARCH_2025.md              ← 39 KB complete guide
-TEMPLATES_CODEOWNERS_PATTERNS.md         ← 8 templates
+guides/codeowners/CODEOWNERS_RESEARCH_2025.md              ← 39 KB complete guide
+docs/templates/TEMPLATES_CODEOWNERS_PATTERNS.md         ← 8 templates
 CODEOWNERS_AUTOMATION_SCRIPTS.py         ← Python tools
-CODEOWNERS_QUICK_START.md                ← 30-day plan
+guides/codeowners/CODEOWNERS_QUICK_START.md                ← 30-day plan
 CODEOWNERS_2025_RESEARCH_INDEX.md        ← Navigation
 
 Configs:
@@ -561,9 +561,9 @@ Configs:
 
 ### 📁 Security (9 súborov + configs)
 ```
-ENTERPRISE_SECURITY_GUIDE_2025.md        ← 38 KB framework
-SECURITY_IMPLEMENTATION_TEMPLATES.md     ← 8 templates
-SECURITY_ARCHITECTURE_PATTERNS.md        ← 6 patterns
+guides/advanced/ENTERPRISE_SECURITY_GUIDE_2025.md        ← 38 KB framework
+guides/security/SECURITY_IMPLEMENTATION_TEMPLATES.md     ← 8 templates
+guides/security/SECURITY_ARCHITECTURE_PATTERNS.md        ← 6 patterns
 README_SECURITY_GUIDES.md                ← Navigation
 SECURITY_RESEARCH_SUMMARY.md             ← Overview
 SECURITY.md                              ← Vulnerability policy
@@ -579,20 +579,20 @@ Configs:
 
 ### 📁 GitHub Actions (8 súborov)
 ```
-GITHUB_ACTIONS_OPTIMIZATION_2025.md      ← 31 KB complete guide
+guides/github-actions/GITHUB_ACTIONS_OPTIMIZATION_2025.md      ← 31 KB complete guide
 GITHUB_ACTIONS_2025_RESEARCH_SUMMARY.md  ← Executive summary
-GITHUB_ACTIONS_IMPLEMENTATION_CHECKLIST.md ← 4-phase plan
-GITHUB_ACTIONS_README.md                 ← Navigation
-COST_OPTIMIZATION_CALCULATOR.md          ← ROI analysis
+guides/github-actions/GITHUB_ACTIONS_IMPLEMENTATION_CHECKLIST.md ← 4-phase plan
+guides/github-actions/GITHUB_ACTIONS_README.md                 ← Navigation
+docs/COST_OPTIMIZATION_CALCULATOR.md          ← ROI analysis
 QUICK_REFERENCE.md                       ← Cheat sheet
 github-actions-templates.yml             ← 10 templates
 ```
 
 ### 📁 GitHub CLI (5 súborov)
 ```
-GH_CLI_ADVANCED_2025.md                  ← 25 KB reference
+docs/research/GH_CLI_ADVANCED_2025.md                  ← 25 KB reference
 GH_CLI_QUICK_REFERENCE.md                ← Daily lookup
-REAL_WORLD_EXAMPLES.md                   ← 8 scripts
+scripts/examples/REAL_WORLD_EXAMPLES.md                   ← 8 scripts
 README_RESEARCH.md                       ← Navigation
 INDEX.md                                 ← Quick index
 
@@ -614,32 +614,32 @@ QUICK_REFERENCE_CARD.md                  ← Quick lookup
 
 ### 📁 Monorepo (4 súbory)
 ```
-MONOREPO_WORKFLOWS_2025.md               ← 33 KB complete
-MONOREPO_CONFIG_TEMPLATES.md             ← Production configs
-MONOREPO_QUICK_REFERENCE.md              ← Command reference
+guides/advanced/MONOREPO_WORKFLOWS_2025.md               ← 33 KB complete
+docs/templates/MONOREPO_CONFIG_TEMPLATES.md             ← Production configs
+docs/reference/MONOREPO_QUICK_REFERENCE.md              ← Command reference
 MONOREPO_RESEARCH_INDEX.md               ← Navigation
 ```
 
 ### 📁 Dependency Management (4 súbory)
 ```
-GIT_DEPENDENCY_MANAGEMENT_2025_GUIDE.md  ← Comprehensive
-DEPENDENCY_DECISION_MATRIX.md            ← Decision trees
-DEPENDENCY_COMMANDS_REFERENCE.md         ← Practical commands
+docs/research/GIT_DEPENDENCY_MANAGEMENT_2025_GUIDE.md  ← Comprehensive
+guides/dependencies/DEPENDENCY_DECISION_MATRIX.md            ← Decision trees
+docs/reference/DEPENDENCY_COMMANDS_REFERENCE.md         ← Practical commands
 DEPENDENCY_MANAGEMENT_README.md          ← Navigation
 START_HERE_DEPENDENCY_MANAGEMENT.md      ← Entry point
 ```
 
 ### 📁 Debugging (4 súbory)
 ```
-ADVANCED_DEBUGGING_GUIDE_2025.md         ← Complete reference
+guides/advanced/ADVANCED_DEBUGGING_GUIDE_2025.md         ← Complete reference
 DEBUGGING_SCRIPTS.md                     ← Production scripts
 DEBUGGING_USE_CASES_2025.md              ← Real scenarios
-DEBUGGING_QUICK_REFERENCE.md             ← Quick troubleshooting
+docs/reference/DEBUGGING_QUICK_REFERENCE.md             ← Quick troubleshooting
 ```
 
 ### 📁 Collaborative Coding (2 súbory)
 ```
-COLLABORATIVE_CODING_2025.md             ← 38 KB complete
+guides/intermediate/COLLABORATIVE_CODING_2025.md             ← 38 KB complete
 WORKFLOW_PATTERNS_QUICK_GUIDE.md         ← 4 patterns
 CONFIGURATION_TEMPLATES_2025.md          ← Production configs
 ```
